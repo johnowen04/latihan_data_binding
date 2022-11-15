@@ -7,10 +7,16 @@ import android.os.Build
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import androidx.databinding.BindingAdapter
 import com.example.latihandatabinding.R
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.lang.Exception
+
+@BindingAdapter("android:imageUrl", "android:progressBar")
+fun loadImageFromUrl(view: ImageView, url: String, progressBar: ProgressBar) {
+    view.loadImage(url, progressBar)
+}
 
 fun ImageView.loadImage(url: String?, progressBar: ProgressBar?) {
     Picasso.get()
