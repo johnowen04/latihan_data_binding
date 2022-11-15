@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso
 import java.lang.Exception
 
 @BindingAdapter("android:imageUrl", "android:progressBar")
-fun loadImageFromUrl(view: ImageView, url: String, progressBar: ProgressBar) {
+fun loadImageFromUrl(view: ImageView, url: String?, progressBar: ProgressBar) {
     view.loadImage(url, progressBar)
 }
 
@@ -31,7 +31,7 @@ fun ImageView.loadImage(url: String?, progressBar: ProgressBar?) {
                 }
             }
 
-            override fun onError(e: Exception?) { }
+            override fun onError(e: Exception?) {  }
         })
 }
 

@@ -6,8 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.example.latihandatabinding.R
+import com.example.latihandatabinding.databinding.FragmentStudentDetailBinding
+import com.example.latihandatabinding.model.Student
 import com.example.latihandatabinding.util.loadImage
 import com.example.latihandatabinding.viewmodel.DetailViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -18,16 +23,19 @@ import java.util.concurrent.TimeUnit
 
 class StudentDetailFragment : Fragment() {
     private lateinit var viewModel: DetailViewModel
+    private lateinit var dataBinding: FragmentStudentDetailBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_student_detail, container, false)
+        dataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_student_detail, container, false)
+        return dataBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val studentId = StudentDetailFragmentArgs.fromBundle(requireArguments()).studentId
 
         viewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
@@ -38,23 +46,26 @@ class StudentDetailFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.studentLiveData.observe(viewLifecycleOwner) {
-            imgDetailStudent.loadImage(it.photoUrl, null)
-            editID.setText(it.id)
-            editName.setText(it.name)
-            editDoB.setText(it.dob)
-            editPhone.setText(it.phone)
+            dataBinding.student = it
+            dataBinding.createNotificationListener = object: CreateNotificationClickListener {
+                override fun onCreateNotificationClick(view: View, student: Student) {
+                    Observable.timer(5, TimeUnit.SECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            Log.d("Messages: ", "five seconds")
+                            MainActivity.showNotification(student.name.toString(),
+                                "A new notification created",
+                                R.drawable.ic_baseline_person_24)
+                        }
+                }
+            }
 
-            val student = it
-            btnNotification.setOnClickListener {
-                Observable.timer(5, TimeUnit.SECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        Log.d("Messages: ", "five seconds")
-                        MainActivity.showNotification(student.name.toString(),
-                            "A new notification created",
-                            R.drawable.ic_baseline_person_24)
-                    }
+            dataBinding.updateButtonListener = object: UpdateButtonClickListener {
+                override fun onUpdateButtonClick(view: View, student: Student) {
+                    Toast.makeText(view.context, "Data Updated", Toast.LENGTH_SHORT).show()
+                    Navigation.findNavController(view).popBackStack()
+                }
             }
         }
     }
