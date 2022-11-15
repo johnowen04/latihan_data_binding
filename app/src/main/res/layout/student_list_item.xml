@@ -7,6 +7,10 @@
         <variable
             name="student"
             type="com.example.latihandatabinding.model.Student" />
+
+        <variable
+            name="studentDetail"
+            type="com.example.latihandatabinding.view.StudentDetailClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,6 +84,8 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
                     android:text="Detail"
+                    android:tag="@{student.id}"
+                    android:onClick="@{studentDetail::onStudentDetailClick}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
