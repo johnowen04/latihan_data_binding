@@ -25,7 +25,7 @@ class DetailViewModel(application: Application): AndroidViewModel(application) {
          */
 
         queue = Volley.newRequestQueue(getApplication())
-        val url = "https://ubaya.fun/hybrid/160420016/mvvm_api/getstudent.php?id=$studentId"
+        val url = "http://adv.jitusolution.com/student.php?id=$studentId"
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             {

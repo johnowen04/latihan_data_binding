@@ -36,7 +36,7 @@ class ListViewModel(application: Application): AndroidViewModel(application) {
         loadingLiveData.value = true
 
         queue = Volley.newRequestQueue(getApplication())
-        val url = "https://ubaya.fun/hybrid/160420016/mvvm_api/student.php"
+        val url = "http://adv.jitusolution.com/student.php"
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             {
